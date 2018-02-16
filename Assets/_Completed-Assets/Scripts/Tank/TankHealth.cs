@@ -19,6 +19,11 @@ namespace Complete
         private bool m_Dead;                                // Has the tank been reduced beyond zero health yet?
 
 
+        public float CurrentHealth
+        {
+            get { return m_CurrentHealth; }
+        }
+
         private void Awake ()
         {
             // Instantiate the explosion prefab and get a reference to the particle system on it.

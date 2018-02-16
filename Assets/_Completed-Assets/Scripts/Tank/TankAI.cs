@@ -15,11 +15,16 @@ namespace Complete
 
         private TankMovement m_Movement;    // Reference to tank's movement script, used by the AI to control movement.
         private TankShooting m_Shooting;    // Reference to tank's shooting script, used by the AI to fire shells.
+        private TankHealth m_Health;
+
         private List<GameObject> m_Targets; // List of enemy targets for this tank
         private Root tree;                  // The tank's behaviour tree
         private Blackboard blackboard;      // The tank's behaviour blackboard
 
-        // Initialisation
+        private int m_collisions = 0;
+        private bool m_resolvingBlockedPath = false;
+
+    // Initialisation
         private void Awake()
         {
             m_Targets = new List<GameObject>();
@@ -30,6 +35,7 @@ namespace Complete
             Debug.Log("Initialising AI player " + m_PlayerNumber);
             m_Movement = GetComponent<TankMovement> ();
             m_Shooting = GetComponent<TankShooting> ();
+            m_Health = GetComponent<TankHealth>();
 
             tree = CreateBehaviourTree();
             blackboard = tree.Blackboard;
@@ -78,5 +84,29 @@ namespace Complete
             m_Shooting.AIFire(force);
         }
 
+
+    void SetResolvingBlockedPath(bool resolving)
+    {
+      m_resolvingBlockedPath = resolving;
+      //Debug.Log("m_resolvingBlockedPath " + m_resolvingBlockedPath);
     }
+
+    void OnCollisionEnter(Collision collision)
+    {
+      if (collision.gameObject.tag == "EnvironmentCollider")
+      {
+        m_collisions++;
+      }
+        
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+      if (collision.gameObject.tag == "EnvironmentCollider")
+      {
+        m_collisions--;
+      }
+    }
+
+  }
 }
